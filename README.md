@@ -1,1 +1,5 @@
 # blog
+
+
+## Env requirements
+port
