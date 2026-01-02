@@ -1,11 +1,11 @@
 package basicArticle
 
 import (
+	"os"
+	"path/filepath"
 	"testing"
 )
 
-// getTitle() string
-// getContent() string
 func TestGetTitle(t *testing.T) {
 
 	tests := []struct {
@@ -47,7 +47,7 @@ func TestGetTitle(t *testing.T) {
 			actualOutput, err := GetTitle(tt.input)
 			if tt.shouldError {
 				if err == nil {
-					t.Errorf("GetTitle() did not recieve an error when expected")
+					t.Fatal("GetTitle() did not recieve an error when expected")
 				}
 				if err.Error() != tt.errorMessage {
 					t.Errorf("GetTitle() recieved error '%v', but wanted error '%v'", err, tt.errorMessage)
@@ -61,6 +61,77 @@ func TestGetTitle(t *testing.T) {
 				}
 				if tt.expectedOutput != actualOutput {
 					t.Errorf("GetTitle() expects %v, got %v", tt.expectedOutput, actualOutput)
+				}
+			}
+		})
+	}
+}
+
+func TestGetContent(t *testing.T) {
+	tmpDir := t.TempDir()
+
+	tests := []struct {
+		description    string
+		fileName       string
+		fileContent    string
+		createFile     bool
+		expectedOutput string
+		shouldError    bool
+		errorMessage   string
+	}{
+		{
+			description:    "normal content",
+			fileName:       "testArticle.md",
+			fileContent:    "Hello, this is an article",
+			createFile:     true,
+			expectedOutput: "Hello, this is an article",
+			shouldError:    false,
+			errorMessage:   "",
+		}, {
+			description:    "no content",
+			fileName:       "testArticle.txt",
+			fileContent:    "",
+			createFile:     true,
+			expectedOutput: "",
+			shouldError:    true,
+			errorMessage:   "no content found",
+		}, {
+			description:    "only whitespace",
+			fileName:       "test.Article.txt",
+			fileContent:    "   \n   ",
+			createFile:     true,
+			expectedOutput: "",
+			shouldError:    true,
+			errorMessage:   "no content found",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.description, func(t *testing.T) {
+			path := filepath.Join(tmpDir, tt.fileName)
+			if tt.createFile {
+				if err := os.WriteFile(path, []byte(tt.fileContent), 0644); err != nil {
+					t.Fatalf("failed to create test file: %v", err)
+				}
+			}
+
+			actualOutput, err := GetContent(path)
+			if tt.shouldError {
+				if err == nil {
+					t.Fatal("GetContent() did not recieve an error when expected")
+				}
+				if err.Error() != tt.errorMessage {
+					t.Errorf("GetContent() recieved error '%v', but wanted error '%v'", err, tt.errorMessage)
+				}
+				if tt.expectedOutput != actualOutput {
+					t.Errorf("GetContent() recieved response %v when an error was expected", actualOutput)
+				}
+			} else {
+				if err != nil {
+					t.Errorf("GetContent() recieved an unexpected error: %v", err)
+				}
+				if tt.expectedOutput != actualOutput {
+					t.Errorf("GetContent() expects %v, got %v", tt.expectedOutput, actualOutput)
 				}
 			}
 		})

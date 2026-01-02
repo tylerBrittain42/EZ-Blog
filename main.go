@@ -50,13 +50,15 @@ func (cfg *config) articleHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	canAccess, err := helper.IsAccessable(name)
+	nameExt := name + ".md"
+	canAccess, err := validator.IsAccessible(cfg.templateDir, nameExt)
+	// TODO: improve me
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(fmt.Sprintf("error: %v\n", err)))
 		return
 	}
-	if canAccess == false {
+	if !canAccess {
 		w.WriteHeader(http.StatusNotAcceptable)
 		w.Write([]byte("Unable to access article"))
 		return
@@ -64,6 +66,25 @@ func (cfg *config) articleHandler(w http.ResponseWriter, r *http.Request) {
 
 	http.ServeFile(w, r, "template/index.html")
 
+	// doing template stuff here
+	// remove line above and also this comment
+	// use name from above
+
+	// CONSIDER: how to handle spaces? swap name with underscore, but we already do not allow symbols so maybe table this as future issue
+	// could also be diff in the metadata version so don't trip
+	type article interface {
+		GetTitle(fileName string) string
+		GetContent(fileName string) string
+	}
+
+	// procedure
+	// 1. get title - DONE
+	// 2. get content
+	// 2.1 if empty, then return a custom error message
+	// 3. render template
+	// 4. return template
+
+}
 
 type config struct {
 	templateDir string
