@@ -67,7 +67,8 @@ func TestIsAccessible(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.description, func(t *testing.T) {
-			actualOutput, _ := IsAccessible(testDirectory, tt.name)
+			filePath := testDirectory + "/" + tt.name
+			actualOutput, _ := IsAccessible(filePath)
 			if tt.expectedOutput != actualOutput {
 				t.Errorf("IsAccessible() expects %v, got %v", tt.expectedOutput, actualOutput)
 			}

@@ -3,7 +3,6 @@ package validator
 import (
 	"errors"
 	"os"
-	"path/filepath"
 	"regexp"
 )
 
@@ -18,9 +17,7 @@ func IsAlphaNumeric(input string) (bool, error) {
 	return isMatch, nil
 }
 
-func IsAccessible(dir string, fileName string) (bool, error) {
-
-	filePath := filepath.Join(dir, fileName)
+func IsAccessible(filePath string) (bool, error) {
 
 	_, err := os.Stat(filePath)
 	if errors.Is(err, os.ErrNotExist) {
