@@ -39,6 +39,12 @@ func TestGetTitle(t *testing.T) {
 			expectedOutput: "",
 			shouldError:    true,
 			errorMessage:   "filename must contain a single dot",
+		}, {
+			description:    "nested filepath",
+			input:          "subdir/testArticle.md",
+			expectedOutput: "testArticle",
+			shouldError:    false,
+			errorMessage:   "",
 		},
 	}
 
@@ -103,6 +109,14 @@ func TestGetContent(t *testing.T) {
 			expectedOutput: "",
 			shouldError:    true,
 			errorMessage:   "no content found",
+		}, {
+			description:    "nested file",
+			fileName:       "subdir/nested.md",
+			fileContent:    "Nested content",
+			createFile:     true,
+			expectedOutput: "Nested content",
+			shouldError:    false,
+			errorMessage:   "",
 		},
 	}
 
@@ -110,6 +124,9 @@ func TestGetContent(t *testing.T) {
 		t.Run(tt.description, func(t *testing.T) {
 			path := filepath.Join(tmpDir, tt.fileName)
 			if tt.createFile {
+				if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
+					t.Fatalf("failed to create directory: %v", err)
+				}
 				if err := os.WriteFile(path, []byte(tt.fileContent), 0644); err != nil {
 					t.Fatalf("failed to create test file: %v", err)
 				}

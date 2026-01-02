@@ -2,10 +2,13 @@ package basicArticle
 
 import (
 	"errors"
+	"os"
+	"path/filepath"
 	"strings"
 )
 
-func GetTitle(fileName string) (string, error) {
+func GetTitle(filePath string) (string, error) {
+	fileName := filepath.Base(filePath)
 	dotCount := strings.Count(fileName, ".")
 	if dotCount != 1 {
 		return "", errors.New("filename must contain a single dot")
