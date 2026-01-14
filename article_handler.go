@@ -2,9 +2,11 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"html/template"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/tylerBrittain42/blog/pkg/basicArticle"
 	"github.com/tylerBrittain42/blog/pkg/validator"
@@ -43,7 +45,6 @@ func (cfg *config) specificArticleHandler(w http.ResponseWriter, r *http.Request
 		respondWithError(w, "Unable to access article", http.StatusNotAcceptable)
 		return
 	}
-	log.Println("able to access")
 
 	// doing template stuff here
 	// remove line above and also this comment
@@ -77,6 +78,10 @@ func (cfg *config) getTemplate(a articleCreator) ([]byte, error) {
 	content, err := a.GetContent(fullName)
 	if err != nil {
 		return nil, err
+	}
+
+	if strings.TrimSpace(content) == "" {
+		return nil, errors.New("article contents were empty")
 	}
 
 	t, err := template.ParseFiles("template/base.html")
