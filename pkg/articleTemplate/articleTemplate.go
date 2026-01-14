@@ -7,7 +7,6 @@ import (
 	"strings"
 )
 
-func (cfg *config) getTemplate(a articleCreator) ([]byte, error) {
 type ArticleCreator interface {
 	GetFilePath(dir string, name string) (string, error)
 	GetTitle(fileName string) (string, error)
@@ -19,7 +18,6 @@ func GetTemplate(a ArticleCreator, templateDir, name string) ([]byte, error) {
 		Title   string
 		Content string
 	}
-	fullName, err := a.GetFilePath(cfg.templateDir, cfg.name)
 	fullName, err := a.GetFilePath(templateDir, name)
 	if err != nil {
 		return nil, err
