@@ -22,6 +22,7 @@ func main() {
 
 	cfg := config{templateDir: os.Getenv("DIR")}
 
+	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	mux.HandleFunc("/", indexHandler)
 	mux.HandleFunc("/toc", cfg.tableOfContentsHandler)
 	mux.HandleFunc("GET /article/", func(w http.ResponseWriter, r *http.Request) {
