@@ -10,14 +10,17 @@ import (
 )
 
 func (cfg *config) tableOfContentsHandler(w http.ResponseWriter, r *http.Request) {
-	articles, err := articleTemplate.GetArticleList(cfg.templateDir)
-	log.Println(articles)
-	log.Println(articles[0].Title)
+	tocBytes, err := articleTemplate.CreateToc(cfg.templateDir)
 	if err != nil {
 		respondWithError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	http.ServeFile(w, r, "template/toc.html")
+
+	_, err = w.Write(tocBytes)
+	if err != nil {
+		log.Printf("Unable to write tocBytes:, %v\n", err)
+	}
+
 }
 
 func (cfg *config) specificArticleHandler(w http.ResponseWriter, r *http.Request) {

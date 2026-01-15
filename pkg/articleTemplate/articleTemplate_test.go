@@ -154,50 +154,31 @@ func TestGetTemplate(t *testing.T) {
 	})
 }
 
-func sliceIsEqual(a, b []ArticleInfo) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	// The order of elements from reading a directory is not guaranteed.
-	// To have a consistent comparison, we sort both slices by Title.
-	sort.Slice(a, func(i, j int) bool {
-		return a[i].Title < a[j].Title
-	})
-	sort.Slice(b, func(i, j int) bool {
-		return b[i].Title < b[j].Title
-	})
-
-	return reflect.DeepEqual(a, b)
-}
-
 func TestGetArticleList(t *testing.T) {
 	cases := []struct {
 		name          string
 		filesToCreate []string
-		expected      []ArticleInfo
+		expected      []string
 		expectErr     bool
 		useInvalidDir bool
 	}{
 		{
 			name:          "empty directory",
 			filesToCreate: []string{},
-			expected:      []ArticleInfo{},
+			expected:      []string{},
 			expectErr:     false,
 		},
 		{
 			name:          "one file",
 			filesToCreate: []string{"test.md"},
-			expected:      []ArticleInfo{{Title: "test", Link: "articles/test"}},
+			expected:      []string{"test"},
 			expectErr:     false,
 		},
 		{
 			name:          "multiple files",
 			filesToCreate: []string{"test1.md", "test2.html"},
-			expected: []ArticleInfo{
-				{Title: "test1", Link: "articles/test1"},
-				{Title: "test2", Link: "articles/test2"},
-			},
-			expectErr: false,
+			expected:      []string{"test1", "test2"},
+			expectErr:     false,
 		},
 		{
 			name:          "non-existent directory",
@@ -207,7 +188,7 @@ func TestGetArticleList(t *testing.T) {
 		{
 			name:          "ignore dot files",
 			filesToCreate: []string{".DS_Store", "test1.md"},
-			expected:      []ArticleInfo{{Title: "test1", Link: "articles/test1"}},
+			expected:      []string{"test1"},
 			expectErr:     false,
 		},
 	}
@@ -226,7 +207,7 @@ func TestGetArticleList(t *testing.T) {
 				}
 			}
 
-			result, err := GetArticleList(dir)
+			result, err := getArticleList(dir)
 
 			if tc.expectErr {
 				if err == nil {
@@ -246,3 +227,14 @@ func TestGetArticleList(t *testing.T) {
 	}
 }
 
+func sliceIsEqual(a, b []string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	// The order of elements from reading a directory is not guaranteed.
+	// To have a consistent comparison, we sort both slices.
+	sort.Strings(a)
+	sort.Strings(b)
+
+	return reflect.DeepEqual(a, b)
+}
