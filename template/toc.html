@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Blog - TOC</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
     <h1>Table of Contents</h1>
     <p>List below</p>
 
     <ul>
+        <li><a href="/">home</a></li>
     {{range .}}
         <li><a href="article/{{.}}">{{.}}</a></li>
     {{end}}
