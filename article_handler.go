@@ -10,7 +10,7 @@ import (
 )
 
 func (cfg *config) tableOfContentsHandler(w http.ResponseWriter, r *http.Request) {
-	tocBytes, err := articleTemplate.CreateToc(cfg.templateDir)
+	tocBytes, err := articleTemplate.CreateToc(cfg.articleDir)
 	if err != nil {
 		respondWithError(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -36,7 +36,7 @@ func (cfg *config) specificArticleHandler(w http.ResponseWriter, r *http.Request
 	}
 
 	bArt := basicArticle.BasicArticle{}
-	fullPath, err := bArt.GetFilePath(cfg.templateDir, cfg.name)
+	fullPath, err := bArt.GetFilePath(cfg.articleDir, cfg.name)
 	if err != nil {
 		respondWithError(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -52,7 +52,7 @@ func (cfg *config) specificArticleHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	articleBytes, _ := articleTemplate.GetTemplate(bArt, cfg.templateDir, cfg.name)
+	articleBytes, _ := articleTemplate.GetTemplate(bArt, cfg.articleDir, cfg.name)
 
 	_, err = w.Write(articleBytes)
 	if err != nil {

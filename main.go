@@ -20,7 +20,7 @@ func main() {
 		Handler: mux,
 	}
 
-	cfg := config{templateDir: os.Getenv("DIR")}
+	cfg := config{templateDir: os.Getenv("TEMPLATE_DIR"), articleDir: os.Getenv("ARTICLE_DIR")}
 
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	mux.HandleFunc("/", indexHandler)
@@ -41,5 +41,6 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 type config struct {
 	templateDir string
+	articleDir  string
 	name        string
 }
