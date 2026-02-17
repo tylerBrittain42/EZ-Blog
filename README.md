@@ -1,10 +1,14 @@
 # blog
-A basic site that will render articles based on a local directory. 
+A basic site that will render articles and a table of contents based on a specified directory.
+
+## Example
+An example blog can be found at my personal site https://blog.tylerbrittain.xyz/
 
 ## Project intentions
-The goal of this project was to familiarize myself with the libs for http and templates. This is by no means recommended as it is barebones and very much an MVP. Upon release, the live site can be viewed here.
+The goal of this project is to gain experience with using go templates, specifically with dynamically generating them. Ultimately, I want this to be an executable one-stop shop that will allow a layman to host a blog.
 
 
 ## Env requirements
 PORT
-DIR(full path)
+TEMPLATE_DIR
+ARTICLE_DIR                    
