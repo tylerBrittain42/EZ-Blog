@@ -1,4 +1,4 @@
-# blog
+# EZ-Blogger
 A basic site that will render articles and a table of contents based on a specified directory.
 
 ## Example
