@@ -10,5 +10,7 @@ The goal of this project is to gain experience with using go templates, specific
 
 ## Env requirements
 PORT
+
 TEMPLATE_DIR
+
 ARTICLE_DIR                    
